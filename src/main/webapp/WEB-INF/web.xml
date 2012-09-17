@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<web-app version="2.5" 
+    xmlns="http://java.sun.com/xml/ns/javaee" 
+    xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+        
+    <!-- spring security integration -->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <display-name>wicket</display-name>
+    
+    <!-- JSF Servlet is defined to container -->              
+    
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/dispatcher-servlet.xml
+<!--             classpath:service-context-->
+        </param-value>
+    </context-param>
+    
+
+    <!-- 
+        This listener runs when the app is first started. It instantiates the ApplicationContext (from 
+        WEB-INF/applicationContext.xml) and places a and places areference to it in the ServletContext
+    -->
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+    <!-- 
+        This listener is needed if you declare any of your beans to be request-scoped or session-scoped
+        X• Web scopes instead of the usual Spring scopes of singleton or prototype
+        Lets you give request or session scopes to beans in applicationContext.xml. If you don’t use these scopes, this listener is not required
+    -->
+    <listener>
+        <listener-class>
+            org.springframework.web.context.request.RequestContextListener
+        </listener-class>
+    </listener>    
+    
+ 
+<!--     Welcome Page -->
+    <welcome-file-list>
+        <welcome-file>/home</welcome-file>
+    </welcome-file-list>        
+    
+    <!-- PrettyFaces configuration -->
+    <filter>
+        <filter-name>Pretty Filter</filter-name>
+        <filter-class>com.ocpsoft.pretty.PrettyFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Pretty Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+    
+    <session-config>
+        <session-timeout>
+            60
+        </session-timeout>
+    </session-config>
+    
+<!--    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/generic-error.xhtml</location>
+    </error-page>-->            
+    
+    <!-- Kodowanie znaków: UTF-8 -->    
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+</web-app>

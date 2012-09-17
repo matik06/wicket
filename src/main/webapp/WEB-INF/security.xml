@@ -1,0 +1,73 @@
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+  xmlns:beans="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <!-- This must go before the http element in order to be used by security:authorize tags using the access attribute -->
+    <!-- pozwala na dziedziczenie ról w warstwie widoku -->
+    <beans:bean id="expressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+        <beans:property name="roleHierarchy" ref="roleHierarchy" />
+    </beans:bean>
+    
+    <global-method-security secured-annotations="enabled" jsr250-annotations="enabled" pre-post-annotations="enabled" />    
+    
+    <http auto-config="true" use-expressions="true" once-per-request="false" access-denied-page="/access-deny" access-decision-manager-ref="accessDecisionManager">        
+        <form-login login-page="/login" default-target-url="/"/>        
+        <logout logout-url="/logout" logout-success-url="/login" invalidate-session="true" delete-cookies="JSESSIONID"/>
+        
+        <!-- parametr https wymusza przekierowanie na protokół https za każdym razem gdy http jest użyty -->
+        <intercept-url pattern="/**" requires-channel="https"/>
+        <intercept-url pattern="/customers/**" access="hasRole('Helpdesk_Manager')" />
+        <intercept-url pattern="/helpdesk-users" access="hasRole('Helpdesk_User')" />
+        
+        <!-- Detecting timeout -->
+        <session-management invalid-session-url="/invalid-session" />   
+    </http>
+    
+    
+    <!--<beans:bean id="encoder" class="pl.helpdesk.security.CustomPasswordEncoder" />-->
+    <beans:bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    <beans:bean id="userDetailsService" class="pl.helpdesk.security.UserDetailsServiceImpl"/>    
+    
+    <!-- Ustawienie informacji skad spring ma pobierac uzytkownikow oraz o szyfrowaniu ich haseł  -->
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="userDetailsService">        
+            <password-encoder ref="encoder"/>
+        </authentication-provider>
+    </authentication-manager>
+    
+    
+    <!-- dziedziczenie ról -->
+    <beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <beans:property name="decisionVoters">
+            <beans:list>        
+                <beans:bean class="org.springframework.security.web.access.expression.WebExpressionVoter">
+                    <beans:property name="expressionHandler" ref="expressionHandler" />
+                </beans:bean>
+                <beans:ref bean="roleHierarchyVoter" />                
+                <beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
+    
+    <beans:bean id="roleHierarchyVoter" class="org.springframework.security.access.vote.RoleHierarchyVoter">
+        <beans:constructor-arg ref="roleHierarchy" />
+    </beans:bean>
+    
+    <beans:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+        <beans:property name="hierarchy">
+            <beans:value>
+                Admin > Customer_Manager
+                Admin > Helpdesk_Manager
+                
+                Customer_Manager > Customer_User
+                Helpdesk_Manager > Helpdesk_User
+            </beans:value>
+        </beans:property>
+    </beans:bean>        
+            
+</beans:beans>
