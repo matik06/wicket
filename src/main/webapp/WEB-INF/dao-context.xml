@@ -70,7 +70,7 @@
                 <prop key="hibernate.format_sql">true</prop>
                 <!-- opcja do wyłączenia (http://stackoverflow.com/questions/438146/hibernate-question-hbm2ddl-auto-possible-values-and-what-they-do)-->
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
-                
+<!--                <prop key="javax.persistence.validation.mode">none</prop>-->
                 <!-- ponizsza konfiguracja wylancza springowe zarzadzanie transakcjami -->
 <!--                <prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>-->
 <!--                <prop key="hibernate.current_session_context_class">thread</prop>-->

@@ -17,15 +17,15 @@ import org.springframework.stereotype.Service;
  *
  * @author Mateusz Lubański <mlubanskii@gmail.com>
  */
-@Service("HelpdeskUserService")
+@Service("UserService")
 @Scope(proxyMode= ScopedProxyMode.TARGET_CLASS)
 public class UserServiceImpl extends GenericServiceImpl<User, Integer, UserDao> implements UserService {
     @Autowired
-    UserDao helpdeskUserDao;
+    UserDao userDao;
 
     @Override
     public UserDao getDao() {
-        return this.helpdeskUserDao;
+        return this.userDao;
     }
 
 //    @Override

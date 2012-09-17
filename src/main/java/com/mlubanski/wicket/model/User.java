@@ -6,13 +6,8 @@ package com.mlubanski.wicket.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  *
@@ -27,11 +22,7 @@ public class User extends BaseEntity<Integer> implements Serializable {
    
    protected String firstName;
    protected String lastName;
-   @NotNull
-   @Email
    protected String email;
-   @NotNull
-   @Length(min=3)   
    protected String login;
    protected String password;
    protected String phone;
@@ -111,11 +102,7 @@ public class User extends BaseEntity<Integer> implements Serializable {
     }
 
     public void setNewPassword(String newPassword) {
-        if (newPassword != null && !newPassword.isEmpty()) {
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String hashedPassword = passwordEncoder.encode(newPassword);
-            setPassword(hashedPassword);
-        }
+        this.newPassword = newPassword;
     }
     
     public String getPhone() {
