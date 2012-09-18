@@ -8,25 +8,29 @@ import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
  * 
  * @see com.mycompany.Start#main(String[])
  */
-public class WicketApplication extends WebApplication
-{    	
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
-	@Override
-	public Class<HomePage> getHomePage()
-	{
-		return HomePage.class;
-	}
+public class WicketApplication extends WebApplication {
 
-	/**
-	 * @see org.apache.wicket.Application#init()
-	 */
-	@Override
-	public void init()
-	{
-            super.init();
+    private static final String DEFAULT_ENCODING = "UTF-8";
+    
+    /**
+     * @see org.apache.wicket.Application#getHomePage()
+     */
+    @Override
+    public Class<HomePage> getHomePage()
+    {
+            return HomePage.class;
+    }
 
-            getComponentInstantiationListeners().add(new SpringComponentInjector(this));
-	}
+    /**
+     * @see org.apache.wicket.Application#init()
+     */
+    @Override
+    public void init()
+    {
+        super.init();
+        getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+
+        getMarkupSettings().setDefaultMarkupEncoding(DEFAULT_ENCODING);
+        getRequestCycleSettings().setResponseRequestEncoding(DEFAULT_ENCODING);        
+    }
 }
