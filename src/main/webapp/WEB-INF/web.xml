@@ -10,6 +10,9 @@
     
     <display-name>wicket</display-name>
     
+
+    <!-- /WICKET CONFIGURATION -->
+    
     <!-- JSF Servlet is defined to container -->              
     
     <context-param>
@@ -18,6 +21,11 @@
             /WEB-INF/dispatcher-servlet.xml
 <!--             classpath:service-context-->
         </param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>configuration</param-name>
+        <param-value>development</param-value>
     </context-param>
     
 
@@ -39,41 +47,23 @@
         <listener-class>
             org.springframework.web.context.request.RequestContextListener
         </listener-class>
-    </listener>    
+    </listener>        
     
- 
-<!--     Welcome Page -->
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>                
-    
-    <session-config>
-        <session-timeout>
-            60
-        </session-timeout>
-    </session-config>
-    
-<!--    <error-page>
-        <exception-type>java.lang.Exception</exception-type>
-        <location>/generic-error.xhtml</location>
-    </error-page>-->            
-    
-    <!-- Kodowanie znaków: UTF-8 -->    
     <filter>
-        <filter-name>encodingFilter</filter-name>
-        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <filter-name>wicket.myproject</filter-name>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
         <init-param>
-            <param-name>encoding</param-name>
-            <param-value>UTF-8</param-value>
+            <param-name>applicationClassName</param-name>
+            <param-value>com.mlubanski.wicket.WicketApplication</param-value>
         </init-param>
         <init-param>
-            <param-name>forceEncoding</param-name>
-            <param-value>true</param-value>
+            <param-name>configuration</param-name>
+            <param-value>development</param-value>
         </init-param>
     </filter>
+
     <filter-mapping>
-        <filter-name>encodingFilter</filter-name>
+        <filter-name>wicket.myproject</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 </web-app>
